@@ -1,7 +1,9 @@
 package dropwizard.kotlin.example
 
+import dropwizard.kotlin.example.filter.AuthenticationFilter
 import dropwizard.kotlin.example.filter.DiagnosticContextFilter
 import dropwizard.kotlin.example.healthcheck.DefaultHealthCheck
+import dropwizard.kotlin.example.resource.AuthResource
 import dropwizard.kotlin.example.resource.RootResource
 import dropwizard.kotlin.example.resource.UserResource
 import io.dropwizard.Application
@@ -13,6 +15,8 @@ class ExampleApp : Application<ExampleAppConfig>() {
         env.jersey().register(RootResource())
         env.jersey().register(UserResource())
         env.jersey().register(DiagnosticContextFilter())
+        env.jersey().register(AuthenticationFilter())
+        env.jersey().register(AuthResource())
         env.healthChecks().register("default", DefaultHealthCheck())
     }
 

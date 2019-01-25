@@ -1,49 +1,45 @@
 package dropwizard.kotlin.example.resource
 
+import dropwizard.kotlin.example.UserManager
 import dropwizard.kotlin.example.api.User
-import java.util.concurrent.ConcurrentHashMap
+import dropwizard.kotlin.example.filter.Secured
+import java.util.*
 import javax.validation.constraints.NotNull
-import javax.ws.rs.Consumes
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 
 @Path("/user")
-@Consumes(*arrayOf(APPLICATION_JSON))
-@Produces(*arrayOf(APPLICATION_JSON))
+@Consumes(APPLICATION_JSON)
+@Produces(APPLICATION_JSON)
 class UserResource {
-    private val userDb = ConcurrentHashMap<String, User>()
+    private val userManager = UserManager()
 
     @GET
-    fun get(@QueryParam("username") username: String): Response {
-        if (userDb.containsKey(username)) {
-            return Response.ok().entity(userDb[username]).build()
-        }
-        return Response.noContent().build()
+    @Secured
+    fun get(@QueryParam("id") id: UUID): Response {
+
+        return Response.ok(userManager.getUser(id)).build()
     }
 
     @PUT
+    @Secured
     fun put(@NotNull user: User): Response {
-        userDb.put(user.username, user)
-        return Response.ok().build()
+        userManager.updateUser(user)
+        return Response.ok(userManager.getUser(user.id)).build()
     }
 
     @POST
+    @Secured
     fun post(@NotNull user: User): Response {
-        userDb.put(user.username, user)
-        return Response.ok().build()
+        val userUuid = userManager.addUser(user)
+        return Response.ok(userUuid).build()
     }
 
     @DELETE
-    fun delete(@NotNull @QueryParam("username") username: String): Response {
-        userDb.remove(username)
+    fun delete(@NotNull @QueryParam("id") id: Int): Response {
+        userManager.delete(id)
         return Response.ok().build()
     }
 

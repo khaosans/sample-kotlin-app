@@ -1,7 +1,8 @@
-package dropwizard.kotlin.example.api;
+package dropwizard.kotlin.example.api
 
-import javax.validation.constraints.NotNull;
+import java.util.*
+import javax.validation.constraints.NotNull
 
-class User(@NotNull val username: String = "me", @NotNull val email: String = "me@example.com")
+class User(@NotNull val id: UUID = UUID.randomUUID(), @NotNull val username: String = "me", @NotNull val email: String = "me@example.com", @NotNull val password: String = "Test")
 
 
