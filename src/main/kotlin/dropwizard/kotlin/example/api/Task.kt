@@ -1,4 +1,9 @@
 package dropwizard.kotlin.example.api
 
-class Task(name: String, completed: Boolean) {
-}
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class Task(
+        @JsonProperty("name") val name: String,
+        val completed: Boolean,
+        val user: User
+)

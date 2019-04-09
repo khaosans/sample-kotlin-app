@@ -1,6 +1,6 @@
 package dropwizard.kotlin.example.filter
 
-import dropwizard.kotlin.example.resource.parseJWT
+import dropwizard.kotlin.example.resources.parseJWT
 import java.io.IOException
 import javax.annotation.Priority
 import javax.ws.rs.Priorities
@@ -32,7 +32,6 @@ class AuthenticationFilter : ContainerRequestFilter {
         val token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length).trim { it <= ' ' }
 
         try {
-
             // Validate the token
             validateToken(token)
 
@@ -57,8 +56,7 @@ class AuthenticationFilter : ContainerRequestFilter {
         // The WWW-Authenticate header is sent along with the response
         requestContext.abortWith(
                 Response.status(Response.Status.UNAUTHORIZED)
-                        .header(HttpHeaders.WWW_AUTHENTICATE,
-                                "$AUTHENTICATION_SCHEME realm=\"$REALM\"")
+                        .header(HttpHeaders.WWW_AUTHENTICATE, "$AUTHENTICATION_SCHEME realm=\"$REALM\"")
                         .build())
     }
 
